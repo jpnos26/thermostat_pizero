@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta id="viewport" name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Thermostat Login</title>
+  </head>
+<body>
+	<form method="post" action="/auth/login">
+	<div align="center">
+		<table width="360px" border=double frame="box" rules="none" cellpadding="10" cellspacing="0"> 
+		<tr>
+		<td valign="center" align="center" width="60px"><img src="/images/logo.png" width="50px" height="50px"></td>
+		<tr>
+		<td valign="center" align="center" width="20px"><input type="hidden" name="from_page" value="%(from_page)s"> <b> %(msg)s </b></td>
+		<tr>
+		<td valign="center" align="center" width="60px">Username : <input type="text" style="font-size:14px" size="20px" height="14px" name="username" value="%(username)s"></td>
+        	<tr>
+		<td valign="center" align="center" width="60px">Password : <input type="password" style="font-size:14px" size="20px" name="password"> </td>
+		<tr>
+		<td valign="center" align="center" width="60px"><input type="submit" value="Log in"></td>				
+		</tr>
+		</table>
+	</div>
+</body>
+</html>
