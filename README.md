@@ -99,6 +99,7 @@ The author's final internals, before the case top was installed.
 	    - schedule (for scheduled events)
 	    - openweathermap.org app key
 	- Remote3 Weaved 
+	- Fbcp (copy hdmi source on spi)
 		
 
 ##Software installation:
@@ -123,6 +124,7 @@ DHT_Logger is a Esp8266-Dht22 sensor temperature wifi connected.
 		1 for dht
 		1 for Heat (sensor inside Thermostat)
 	So it's possible to have two temperature and two schedule for sensor and in case DHT_Logger in unavailable, Thermostat switch to internal and the correct schedule/temperature.
+	You can switch between dht and sensor pressing area of Set visualization
 
 ##Hardware Configuration:
 
@@ -138,7 +140,7 @@ The author used a Raspberry Pi Zero for his thermostat.
 
 
 ##How USE:
-	Heat :	Schedule change temperature as set on file
+	Heat/Dht :	Schedule change temperature as set on file
 		change temp on knob remain on the temperature till a schedule change it
 		
 	Hold :	Temp remains on set temp (change with knob)
@@ -163,10 +165,16 @@ You can run the code as follows:
 
 You need sudo since the code accesses the Pi GPIO pins, which requires root priviledges
 
-To have the thermostat code start automatically at boot time, copy the resources/thermostat.desktop file into /home/pi/.config/autostart/. This assumes that you have put
-the thermostat code in /home/pi/thermostat. If you have the code elsewhere then edit thermostat.desktop and thermostat.sh to point to where you have the code.
+To have the thermostat code start automatically at boot time, 
+ - sudo crontab -e 
+ - add:   @reboot /home/pi/thermostat/autostart.sh
+ - save and close
+ - sudo reboot now
+
 
 To access the Web-based interface to control the thermostat and change the schedule, just point your favourite browser at the IP address that your Pi board is set to. For example, the author's thermostat is on 10.66.66.30, so entering http://10.66.66.30 will bring up the web interface. The Web Interface is touch sensitive on IOS devices. If you bring up the Web Interface on Safari on an IOS device (iPhone/iPad), you can save it to your home page, and it will use a nice thermostat icon.
+
+From internet acces follow instruction on weaved site
 
 ##Minimal UI (screensaver) mode: 
 

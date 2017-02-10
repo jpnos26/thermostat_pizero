@@ -1,0 +1,49 @@
+{
+    "calibration": {
+    "boilingMeasured": 99.998043,
+    "elevation": 50,
+    "freezingMeasured": 0.0,
+	"correctSensor":-0.5
+    },
+    "logging": {
+        "channel": "file",
+        "level": "error"
+    },
+    "dhtext": {
+    "dhtClientIP": "192.168.1.102",
+    "dhtEnabled": 1,
+	"dhtTimeout" : 10,
+	"dhtCorrect" : 0
+    },
+    "scale": {
+        "tempScale": "metric"
+    },
+    "thermostat": {
+        "fanPin": 18,
+        "heatPin": 27,
+        "maxTemp": 25.0,
+        "minTemp": 15.0,
+        "minUIEnabled": 1,
+        "minUITimeout": 30,
+        "tempCheckInterval": 5,
+        "tempHysteresis": 0.3,
+        "tempStep": 0.1,
+		"tempice": 16.0,
+		"lightOff": 30,
+		"user" : "a",
+		"pass" : "a",
+		"saveCsv": 300
+    },
+    "weather": {
+        "appkey": "9b444a2d4b7a5d2da2c966b37bcef619",
+        "forecastRefreshInterval": 60,
+        "location": "3175081",
+        "weatherExceptionInterval": 5,
+        "weatherRefreshInterval": 60,
+        "URLtimeout": 5
+    },
+    "web": {
+        "host": "discover",
+        "port": 80
+    }
+}
