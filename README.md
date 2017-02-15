@@ -74,7 +74,7 @@ The author's final internals, before the case top was installed.
 
 ![Thermostat Installation](resources/thermostat_installed.jpg)
 
-![Thermostat Installed Min UI](resources/thermostat_installedminUI.png)
+![Thermostat Installed Min UI](resources/thermostat_installedminUI.jpg)
 
  You can see the temperature sensor in a separated place in the own printed box.
 
