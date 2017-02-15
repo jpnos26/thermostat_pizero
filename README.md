@@ -54,6 +54,10 @@ Key features include:
 
 ![Thermostat Edit Schedule - Web UI](resources/thermostat_graph.png)
 
+**Thermostat Dht Web:**
+
+![Thermostat DHT_Logger - Web ](resources/dht_web.png)
+
 **Thermostat Hardware - Internals:**
 
 ![Thermostat wifi Modified - Internals](resources/thermostat_wifi.jpg)
@@ -70,7 +74,7 @@ The author's final internals, before the case top was installed.
 
 ![Thermostat Installation](resources/thermostat_installed.jpg)
 
-![Thermostat Installed Min UI](resources/thermostat_min_installed.jpg)
+![Thermostat Installed Min UI](resources/thermostat_installedminUI.png)
 
  You can see the temperature sensor in a separated place in the own printed box.
 

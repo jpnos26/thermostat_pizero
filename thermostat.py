@@ -287,7 +287,6 @@ windFactor		= 3.6 if tempScale == "metric" else 1.0
 windUnits		= " km/h" if tempScale == "metric" else " mph"
 
 TEMP_TOLERANCE	= 0.1 if tempScale == "metric" else 0.18
-
 currentTemp		= 20.0 if tempScale == "metric" else 72.0
 priorCorrected	= -100.0
 correctedTemp	= 0
@@ -328,6 +327,7 @@ elevation	  	  = 0 if not( settings.exists( "thermostat" ) ) else settings.get( 
 boilingPoint	  = ( 100.0 - 0.003353 * elevation ) if tempScale == "metric" else ( 212.0 - 0.00184 * elevation )
 freezingPoint	  = 0.01 if tempScale == "metric" else 32.018
 referenceRange	  = boilingPoint - freezingPoint
+correctSensor	  = 0 if not( settings.exists( "thermostat" ) ) else settings.get( "calibration" )[ "correctSensor" ]
 
 boilingMeasured   = settings.get( "calibration" )[ "boilingMeasured" ]
 freezingMeasured  = settings.get( "calibration" )[ "freezingMeasured" ]
@@ -393,6 +393,8 @@ dhtUm			= 0
 dht_label		= Label( text= " ",size_hint = (None,None), font_size = '25sp', markup=True, text_size= (300,75),color=( 0.5, 0.5, 0.5, 0.2 ))
 dhtTest			= 0
 dhtSchedule     = 0
+dhtCorrect		= 0 if not( settings.exists( "dhtext") ) else settings.get("dhtext" )[ "dhtCorrect" ]
+dhtweb = "http://" + settings.get( "dhtext" )[ "dhtClientIP" ] + "/"
 
 def get_dht( url ):
 		return json.loads( urllib2.urlopen( url, None, 5 ).read() )
@@ -402,7 +404,7 @@ def dht_load (dt):
 	try	:	
 		dhtUrl			= "http://"+settings.get("dhtext" )[ "dhtClientIP" ]+"/dati"
 		dhtread = get_dht(dhtUrl )
-		dhtTemp=dhtread["S_temperature"]
+		dhtTemp=dhtread["S_temperature"] 
 		dhtUm=dhtread["S_humidity"]
 		dht_label.text = "Dht : T: "+str(dhtTemp)+" c , Ur: "+str(dhtUm)+" %"
 		dhtEnabled 	= 1
@@ -732,7 +734,7 @@ def check_sensor_temp( dt ):
 		global tempSensor,dhtTemp	
 		if dhtEnabled == 1 and dhtTemp <> 0:			
 			rawTemp = dhtTemp
-			correctedTemp = ( ( ( rawTemp - freezingMeasured ) * referenceRange ) / measuredRange ) + freezingPoint
+			correctedTemp = ( ( ( rawTemp - freezingMeasured ) * referenceRange ) / measuredRange ) + freezingPoint + dhtCorrect
 			currentTemp = round( correctedTemp, 1 )
 			log( LOG_LEVEL_DEBUG, CHILD_DEVICE_TEMP, MSG_SUBTYPE_CUSTOM + "/dhtTemp", str( rawTemp ) )
 			log( LOG_LEVEL_DEBUG, CHILD_DEVICE_TEMP, MSG_SUBTYPE_CUSTOM + "/corrected", str( correctedTemp ) )
@@ -740,7 +742,7 @@ def check_sensor_temp( dt ):
 		else:
 			if tempSensor is not None:
 				rawTemp = tempSensor.get_temperature( sensorUnits )
-				correctedTemp = ( ( ( rawTemp - freezingMeasured ) * referenceRange ) / measuredRange ) + freezingPoint
+				correctedTemp = ( ( ( rawTemp - freezingMeasured ) * referenceRange ) / measuredRange ) + freezingPoint + correctSensor
 				currentTemp = round( correctedTemp, 1 )
 				log( LOG_LEVEL_DEBUG, CHILD_DEVICE_TEMP, MSG_SUBTYPE_CUSTOM + "/raw", str( rawTemp ) )
 				log( LOG_LEVEL_DEBUG, CHILD_DEVICE_TEMP, MSG_SUBTYPE_CUSTOM + "/corrected", str( correctedTemp ) )
@@ -978,11 +980,11 @@ class ThermostatApp( App ):
 		# Start checking the temperature
 		Clock.schedule_interval( check_sensor_temp, tempCheckInterval )
 		if dhtEnabled == 1:
-				Clock.schedule_once(dht_load,3)
+				Clock.schedule_once(dht_load,2)
 		# Show the current weather  		
-		Clock.schedule_once( display_current_weather, 8 )
+		Clock.schedule_once( display_current_weather, 6 )
 		#initialize knob		
-		Clock.schedule_once( knob_init, 5 )
+		Clock.schedule_once( knob_init, 4 )
 		
 		return layout
 
@@ -1106,7 +1108,11 @@ class WebInterface(object):
 			html = html.replace( "@@dt@@", dateLabel.text.replace( "[b]", "<b>" ).replace( "[/b]", "</b>" ) + ", " + timeLabel.text.replace( "[b]", "<b>" ).replace( "[/b]", "</b>" ) )
 			html = html.replace( "@@heatChecked@@", "checked" if heatControl.state == "down" else "" )
 			html = html.replace( "@@holdChecked@@", "checked" if holdControl.state == "down" else "" )
-	
+			if dhtEnabled == 0:
+				html = html.replace ("@@dhtsubmit@@", "none")
+			else:
+				html = html.replace ("@@dhtsubmit@@", "true")
+
 		return html
 
 
@@ -1219,6 +1225,49 @@ class WebInterface(object):
 		file.close()
 		
 		return html
+	
+	@cherrypy.expose
+	def redirect(self):
+		global dhtweb
+
+		#file =  open( "web/html/dhtweb.html", "r" )
+
+		f = urllib2.urlopen(dhtweb,None,5)
+
+		#file.close
+
+		#html = html.replace( "@@dhtconn@@", str( dhtweb ) )
+
+		return f
+
+	@cherrypy.expose
+	def grafico(self):
+		global dhtweb
+
+		#file =  open( "web/html/dhtweb.html", "r" )
+
+		f = urllib2.urlopen(dhtweb+"grafico",None,5)
+
+		#file.close
+
+		#html = html.replace( "@@dhtconn@@", str( dhtweb ) )
+
+		return f
+
+	@cherrypy.expose
+	
+	def tabella(self):
+		global dhtweb
+
+		#file =  open( "web/html/dhtweb.html", "r" )
+
+		f = urllib2.urlopen(dhtweb+"tabella",None,5)
+
+		#file.close
+
+		#html = html.replace( "@@dhtconn@@", str( dhtweb ) )
+
+		return f
 
 def startWebServer():	
 	host = "discover" if not( settings.exists( "web" ) ) else settings.get( "web" )[ "host" ]
